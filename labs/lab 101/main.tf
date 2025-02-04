@@ -2,6 +2,16 @@ provider "aws" {
   region = var.region
 }
 
+terraform {
+  required_providers {
+    time = {
+      source  = "hashicorp/time"
+      version = "0.12.1"  # Make sure to use the version that match latest version
+    }
+  }
+}
+
+
 variable "region" {
   default = "us-east-1"
 }
@@ -32,6 +42,10 @@ resource "aws_instance" "vm" {
   tags = {
     Name = "meitar-vm"
   }
+}
+
+resource "time_sleep" "wait_for_ip" {
+  create_duration = "10s"  # Wait for 10 seconds
 }
 
 output "vm_public_ip" {
