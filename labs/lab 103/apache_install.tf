@@ -30,6 +30,7 @@ resource "null_resource" "provision_apache" {
 
 # Updated Output for Server Information to use data source
 output "server_info" {
+    
   value       = "Please browse: http://${aws_instance.vm.public_ip}/welcome.html"
   description = "Instructions to access the server, note that port 80 is currently blocked."
 }

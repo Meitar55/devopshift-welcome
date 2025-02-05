@@ -6,10 +6,6 @@ variable "region" {
  default = "us-east-1"
 }
 
-
-#variable "ami" {
- #default = var.ami_id
- #}
 variable "vm_name" {
  default = "vm-Meitar"
 }
