@@ -1,18 +1,16 @@
-variable "emptyip" {
-  default = ""
+provider "aws" {
+  region = var.region
 }
 
-resource "null_resource" "check_public_ip" {
-  provisioner "local-exec" {
-    command = <<EOT
-      if [ -z "${var.emptyip}" ]; then
-        echo "ERROR: Public IP address was not assigned." >&2
-        exit 1
-        else
-         echo "ip add ${var.emptyip}"
-      fi
-    EOT
-  }
-
- # depends_on = [aws_instance.vm]
+variable "region" {
+  default = "us-east-1"
 }
+
+data "aws_instance" "yaniv_vmIP" {
+  instance_id = "i-09df7e0ed385f871b"
+}
+
+output "vm_public_ip" {
+   description = "The public IP address of the Yaniv VM instance"
+   value = data.aws_instance.yaniv_vmIP.public_ip
+} 
