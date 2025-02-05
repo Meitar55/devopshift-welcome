@@ -61,7 +61,7 @@ resource "null_resource" "check_public_ip" {
         echo "ERROR: Public IP address was not assigned." >&2
         exit 1
         else
-        echo "ip add: $(aws_instance.vm.public_ip)"
+        echo "ip add: ${aws_instance.vm.public_ip}"
       fi
     EOT
   }

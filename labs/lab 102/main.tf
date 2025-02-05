@@ -9,7 +9,7 @@ resource "null_resource" "check_public_ip" {
         echo "ERROR: Public IP address was not assigned." >&2
         exit 1
         else
-         echo "ip add $(var.emptyip)"
+         echo "ip add ${var.emptyip}"
       fi
     EOT
   }
