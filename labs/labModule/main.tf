@@ -13,3 +13,26 @@ output "print_module_publicIP" {
 output "print_module_region" {
   value = module.create_ec2.print_region
 }
+
+
+variable enabled_services{
+    default = []
+}
+
+variable "s3_buckets" {
+  type    = set(string)
+  default = ["prod", "dev"]
+}
+
+resource "aws_s3_bucket" "buckets" {
+  for_each = var.enabled_services
+
+  bucket = "my-app-${each.key}"
+  acl    = "private"
+
+  tags = {
+    Name        = "Bucket for ${each.key}"
+    Environment = "${each.key}"
+  }
+}
+
