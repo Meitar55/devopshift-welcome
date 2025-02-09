@@ -2,6 +2,7 @@ variable "ami_id" {
   default = "ami-0e1bed4f06a3b463d" #Ubuntu 22.04
 }
 variable "instance_type" {
+  type=string
   default = "t2.micro"
 }
 variable "subnet_id" {
@@ -10,6 +11,9 @@ variable "subnet_id" {
 }
 variable "vpc"{
   default = ""
+}
+variable "assignPublicIP"{
+  default=true
 }
 
 resource "aws_security_group" "sg" {
@@ -42,7 +46,7 @@ resource "aws_instance" "meitar-vm" {
   instance_type               = var.instance_type
   subnet_id                   = var.subnet_id[count.index]
   vpc_security_group_ids      = [aws_security_group.sg.id]
-  associate_public_ip_address = true
+  associate_public_ip_address = var.assignPublicIP
 
   tags = {
     Name = "meitar-vm${count.index}"
