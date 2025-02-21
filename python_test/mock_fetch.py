@@ -1,7 +1,8 @@
 # mock_fetch.py
 
-# Import the functions from terraform_configs.py
-from terraform_configs import fetch_aws_details, fetch_ec2_detailes, fetch_lbs_detailes
+# Import the required functions
+from terraform_configs import fetch_aws_details
+from unittest.mock import patch
 
 # Mock the EC2 client function
 def mock_ec2_client():
@@ -12,12 +13,12 @@ def mock_ec2_client():
                     {
                         "InstanceId": "i-0a1b2c3d4e5f6g7h8",
                         "State": {"Name": "running"},
-                        "PublicIpAddress": "54.123.45.67"  # Ensure this key is present
+                        "PublicIpAddress": "54.123.45.67"  # Ensure this key is present for the "running" instance
                     },
                     {
                         "InstanceId": "i-0a1b2c3d4e5f6g7h9",
                         "State": {"Name": "stopped"},
-                        # PublicIpAddress is missing here, simulating a stopped instance
+                        # No PublicIpAddress here to simulate a stopped instance (no public IP)
                     }
                 ]
             }
@@ -45,7 +46,7 @@ def mock_fetch_ec2_detailes():
         for instance in res["Instances"]:
             if instance["State"]["Name"] == "running":
                 instance_id = instance["InstanceId"]
-                public_ip = instance.get("PublicIpAddress", "N/A")  # Use .get() to avoid KeyError
+                public_ip = instance.get("PublicIpAddress", "N/A")  # .get() safely retrieves the value or returns "N/A"
                 break
     
     if instance_id:
@@ -67,11 +68,8 @@ def mock_fetch_lbs_detailes():
     
     return lb_dns
 
-# Inject the mock functions into the global scope of the script
-fetch_ec2_detailes = mock_fetch_ec2_detailes
-fetch_lbs_detailes = mock_fetch_lbs_detailes
-
-
-
-
-fetch_aws_details()
+# Use unittest.mock.patch to replace the actual functions with the mocks
+if __name__ == "__main__":
+    with patch('terraform_configs.fetch_ec2_detailes', mock_fetch_ec2_detailes), \
+         patch('terraform_configs.fetch_lbs_detailes', mock_fetch_lbs_detailes):
+        fetch_aws_details()  # Call the function to generate the mock file
