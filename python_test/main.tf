@@ -4,7 +4,7 @@
   }
 
   resource "aws_instance" "web_server" {
-  ami = "ami-0dee1ac7107ae9f8c"
+  ami = "None"
   instance_type = "t3.small"
   availability_zone = "us-east-1a"
 

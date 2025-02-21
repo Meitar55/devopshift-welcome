@@ -70,7 +70,7 @@ def mock_fetch_lbs_detailes():
 
 
 
-# Use unittest.mock.patch to replace the actual functions with the mocks
+
 with patch('terraform_configs.fetch_ec2_detailes', mock_fetch_ec2_detailes), \
-        patch('terraform_configs.fetch_lbs_detailes', mock_fetch_lbs_detailes):
+    patch('terraform_configs.fetch_lbs_detailes', mock_fetch_lbs_detailes):
     fetch_aws_details()  # Call the function to generate the mock file
