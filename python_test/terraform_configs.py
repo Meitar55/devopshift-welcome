@@ -67,7 +67,9 @@ def fetch_aws_details():
         "load_balancer_dns": lb_dns
     }
 
-    file=open("aws_validation.json", "w")
+
+    output_path = os.path.join(os.path.dirname(__file__), "aws_validation.json")
+    file=open(output_path, "w")
     json.dump(validation_data, file, indent=4)
     file.close()
     
