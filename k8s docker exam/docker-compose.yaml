@@ -1,0 +1,39 @@
+services:
+  web:
+    build: ./fe
+    depends_on:
+      - backend-service
+    ports:
+      - "5002:5002"
+    networks:
+      - app_layer
+      
+  backend-service:
+    build: ./be
+    depends_on:
+      - mysqldb
+    # ports:
+    # - "5009:5001"
+    # environment:
+    #   MYSQL_HOST: mysqldb
+    #   MYSQL_USER: root
+    #   MYSQL_PASSWORD: "123456"
+    #   MYSQL_DATABASE: crypto_db
+    networks:
+      - app_layer
+
+
+  mysqldb:
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: 123456
+      # create database name crypto_db
+      MYSQL_DATABASE: crypto_db  
+    # networks:
+    #   - app_layer
+    # ports:
+    #   - "3306:3306"
+
+networks: #custom network
+    app_layer:
+      driver: bridge    
