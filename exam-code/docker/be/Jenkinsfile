@@ -5,7 +5,7 @@ pipeline {
     environment {
             DOCKERHUB_CREDENTIALS = credentials('docker-hub-creds')
             DOCKER_REGISTRY = 'meitar55'
-            REPO_NAME = 'fe-exam'  // Change to 'be-exam' for backend pipeline
+            REPO_NAME = 'be-exam'  // Change to 'be-exam' for backend pipeline
             IMAGE_TAG = "${env.BUILD_NUMBER}"
     }
    stages {
@@ -74,7 +74,7 @@ pipeline {
                     echo '----------> Docker-Compose-part'
                 #    curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-uname -s-uname -m" -o /usr/local/bin/docker-compose
                 #     docker-compose -f exam-code/docker/docker-compose.yaml down || true
-                #     sh 'docker ps | grep -q 5002 && echo "Port 5002 is mapped and the container is running." || exit 1'
+                #     sh 'docker ps | grep -q 5001 && echo "Port 5001 is mapped and the container is running." || exit 1'
                 #     docker-compose up -d
                 #     sleep 10  # Allow services to start
                 #      curl -f http://localhost:5004 || exit 1  # Adjust for backend if needed
@@ -90,8 +90,8 @@ pipeline {
                     echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin
                     
                     '''
-                    // docker push meitar55/fe-exam:$BUILD_NUMBER
-                    // docker push meitar55/fe-exam:latest
+                    // docker push meitar55/be-exam:$BUILD_NUMBER
+                    // docker push meitar55/be-exam:latest
                 }
             }
             }
