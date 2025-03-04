@@ -7,7 +7,7 @@ pipeline {
             DOCKER_REGISTRY = 'meitar55'
             REPO_NAME = 'fe-exam'  // Change to 'be-exam' for backend pipeline
             IMAGE_TAG = "${env.BUILD_NUMBER}"
-        }
+    }
    stages {
        stage("Clone Repository") {
            steps {
@@ -94,6 +94,6 @@ pipeline {
                     // docker push meitar55/fe-exam:latest
                 }
             }
-        }
-   }
+            }
+            }
 }
