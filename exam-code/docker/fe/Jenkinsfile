@@ -69,7 +69,7 @@ pipeline {
         }
         stage('Integration Test with Docker Compose'){
             steps{
-                // script{
+                script{
                 //     sh '''
                 //     echo ----------> Docker-Compose
                 //     curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-uname -s-uname -m" -o /usr/local/bin/docker-compose
@@ -80,7 +80,7 @@ pipeline {
                 //      curl -f http://localhost:5004 || exit 1  # Adjust for backend if needed
                 //     docker-compose down
                 //     '''
-                // }
+                }
             }
         }
         stage('Push to Docker Hub'){
