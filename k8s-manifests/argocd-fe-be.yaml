@@ -6,9 +6,10 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: 'https://github.com/your-org/your-k8s-manifests.git'  # Replace with actual repo
-    targetRevision: HEAD
-    path: k8s-manifests  # Path to your YAML files
+    repoURL: 'https://github.com/Meitar55/devopshift-welcome.git'  # Replace with actual repo
+    targetRevision: workshop/argo-jenkins-exam
+    path: k8s-manifests # Path to your YAML files
+    # /home/ubuntu/workarea/devopshift/devopshift-welcome/k8s-manifests
   destination:
     server: 'https://kubernetes.default.svc'
     namespace: fe-be-app
