@@ -95,14 +95,14 @@ pipeline {
                     stage('Flake8 Linting') {
                         steps {
                             sh 'pip install flake8' // installing the flake 8 command
-                            sh 'flake8 exam-code/docker/fe/src/mainfe.py'
+                            sh 'flake8 src'
                         }
                     }
                     
                     stage('Bandit Security Scan') {
                         steps {
                             sh 'pip install bandit' // installing the bandit command 
-                            sh 'bandit -r exam-code/docker/fe/src/mainfe.py'
+                            sh 'bandit -r src'
                         }
                     }
             }
