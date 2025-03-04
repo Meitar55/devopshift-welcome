@@ -95,7 +95,7 @@ pipeline {
                     stage('Flake8 Linting') {
                         steps {
                             sh 'pip install flake8' // installing the flake 8 command
-                            sh 'flake8 src/mainfe.py'
+                            sh 'flake8 src/mainfe.py'  //exam-code/docker/fe/src/mainfe.py
                         }
                     }
                     
