@@ -71,7 +71,7 @@ pipeline {
             steps{
                 script{
                     sh '''
-                    echo ----------> Docker-Compose
+                    echo ----------> Docker-Compose-part
                 //     curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-uname -s-uname -m" -o /usr/local/bin/docker-compose
                 //     docker-compose -f exam-code/docker/docker-compose.yaml down || true
                 //     sh 'docker ps | grep -q 5002 && echo "Port 5002 is mapped and the container is running." || exit 1'
