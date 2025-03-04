@@ -1,80 +1,157 @@
+// pipeline {
+//     agent { label 'docker-agent' }
+   
+//     environment {
+//         DOCKERHUB_CREDENTIALS = credentials('docker-hub-creds')
+//         DOCKER_REGISTRY = 'yanivomc'
+//         REPO_NAME = 'fe-exam'  // Change to 'be-exam' for backend pipeline
+//         IMAGE_TAG = "${env.BUILD_NUMBER}"
+        
+//     }
+//     stages {
+//         stage('Clone Repository') {
+//             steps {
+//                 git branch: 'main', url: 'https://github.com/Meitar55/devopshift-welcome.git'
+
+//             }
+//         }
+//         stage('Lint & Security Scan') {
+//             parallel { //remember to up the # of executors 
+//                 stage('Flake8 Linting') {
+//                     steps {
+//                         sh 'pip install flake8' // installing the flake 8 command
+//                         sh 'flake8 src/mainfe.py'
+//                     }
+//                 }
+//                 stage('Bandit Security Scan') {
+//                     steps {
+//                         sh 'pip install bandit' // installing the bandit command 
+//                         sh 'bandit -r src/mainfe.py'
+//                     }
+//                 }
+//             }
+//         }
+
+//         stage('Install Dependencies') {
+//             steps {
+//                 sh 'pip install -r requirements.txt'
+//             }
+//         }
+//         stage('Build Docker Image') {
+//             steps { //using eviornment variables from above
+//                 sh """
+//                     docker build -t ${DOCKER_REGISTRY}/${REPO_NAME}:${IMAGE_TAG} fe/
+//                     docker tag ${DOCKER_REGISTRY}/${REPO_NAME}:${IMAGE_TAG} ${DOCKER_REGISTRY}/${REPO_NAME}:latest
+//                 """
+//             }
+//         }
+//         stage('Run Tests in Container') {
+//             steps {
+//                 sh "docker run --rm ${DOCKER_REGISTRY}/${REPO_NAME}:${IMAGE_TAG} pytest tests/"
+//             }
+//         }
+//         stage('Integration Test with Docker Compose') {
+//             steps {
+//                 sh """
+//                     docker-compose up -d
+//                     sleep 10  # Allow services to start
+//                     curl -f http://localhost:5002 || exit 1
+//                     docker-compose down
+//                 """
+//             }
+//         }
+        
+//        stage('Push to Docker Hub') {
+//             steps {
+//                 sh """
+//                     echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin
+//                     docker push ${DOCKER_REGISTRY}/${REPO_NAME}:${IMAGE_TAG}
+//                     docker push ${DOCKER_REGISTRY}/${REPO_NAME}:latest
+                    
+//                 """
+//             }
+//         }
+//     }
+// }
+
+// ___________________________________________________
 pipeline {
-    agent {
-        docker {
-            image 'python:3.10'
-        }
-    }
+   agent { label 'docker'}
+
     environment {
         DOCKERHUB_CREDENTIALS = credentials('docker-hub-creds')
-        DOCKER_REGISTRY = 'yanivomc'
+        DOCKER_REGISTRY = 'meitar55'
         REPO_NAME = 'fe-exam'  // Change to 'be-exam' for backend pipeline
         IMAGE_TAG = "${env.BUILD_NUMBER}"
-        
     }
-    stages {
-        stage('Clone Repository') {
-            steps {
-                git branch: 'main', url: 'https://github.com/Meitar55/devopshift-welcome.git'
-
-            }
-        }
-        stage('Lint & Security Scan') {
-            parallel { //remember to up the # of executors 
-                stage('Flake8 Linting') {
-                    steps {
-                        sh 'pip install flake8' // installing the flake 8 command
-                        sh 'flake8 src/mainfe.py'
+   stages {
+       stage("Clone Repository") {
+           steps {
+               git branch: 'workshop/argo-jenkins-exam', url: 'https://github.com/NanoShark/devopshift-welcome.git'
+           }
+       }
+       stage("Lint & Security Scan"){
+            parallel {
+                    stage('Flake8 Linting') {
+                        steps {
+                            sh 'pip install flake8' // installing the flake 8 command
+                            sh 'flake8 src/mainfe.py'
+                        }
                     }
-                }
-                stage('Bandit Security Scan') {
-                    steps {
-                        sh 'pip install bandit' // installing the bandit command 
-                        sh 'bandit -r src/mainfe.py'
-                    }
-                }
-            }
-        }
-
-        stage('Install Dependencies') {
-            steps {
-                sh 'pip install -r requirements.txt'
-            }
-        }
-        stage('Build Docker Image') {
-            steps { //using eviornment variables from above
-                sh """
-                    docker build -t ${DOCKER_REGISTRY}/${REPO_NAME}:${IMAGE_TAG} fe/
-                    docker tag ${DOCKER_REGISTRY}/${REPO_NAME}:${IMAGE_TAG} ${DOCKER_REGISTRY}/${REPO_NAME}:latest
-                """
-            }
-        }
-        stage('Run Tests in Container') {
-            steps {
-                sh "docker run --rm ${DOCKER_REGISTRY}/${REPO_NAME}:${IMAGE_TAG} pytest tests/"
-            }
-        }
-        stage('Integration Test with Docker Compose') {
-            steps {
-                sh """
-                    docker-compose up -d
-                    sleep 10  # Allow services to start
-                    curl -f http://localhost:5002 || exit 1
-                    docker-compose down
-                """
-            }
-        }
-        
-       stage('Push to Docker Hub') {
-            steps {
-                sh """
-                    echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin
-                    docker push ${DOCKER_REGISTRY}/${REPO_NAME}:${IMAGE_TAG}
-                    docker push ${DOCKER_REGISTRY}/${REPO_NAME}:latest
                     
-                """
+                    stage('Bandit Security Scan') {
+                        steps {
+                            sh 'pip install bandit' // installing the bandit command 
+                            sh 'bandit -r src/mainfe.py'
+                        }
+                    }
+            }
+       }
+
+       stage('Install Dependencies'){
+            steps{
+                sh "pip install -r exam-code/docker/fe/requirements.txt"
+            }
+       } 
+       stage('Build Docker Image'){
+           
+                steps{
+                    script{
+                    sh '''
+                    docker build -t ${DOCKER_REGISTRY}/${REPO_NAME}:${IMAGE_TAG} .
+                    docker tag ${DOCKER_REGISTRY}/${REPO_NAME}:${IMAGE_TAG} ${DOCKER_REGISTRY}/${REPO_NAME}:latest
+                    '''
+                    }
+                }
+        }
+
+        stage('Run Tests in Container'){
+            steps{
+                sh "docker run --rm ${DOCKER_REGISTRY}/${REPO_NAME}:${IMAGE_TAG} pytest fe/src/tests/"
             }
         }
-    }
+        stage('Integration Test with Docker Compose'){
+            steps{
+                script{
+                    sh '''
+                    docker compose up -d
+                    sleep 10  # Allow services to start
+                    curl -f http://localhost:5002 || exit 1  # Adjust for backend if needed
+                    docke compose down
+                    '''
+                }
+            }
+        }
+        stage('Push to Docker Hub'){
+            steps{
+                script{
+                    sh '''
+                    echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin
+                    docker push <your-dockerhub-username>/your-app:$BUILD_NUMBER
+                    docker push <your-dockerhub-username>/your-app:latest
+                    '''
+                }
+            }
+        }
+   }
 }
-
-
