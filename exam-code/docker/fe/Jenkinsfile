@@ -77,7 +77,7 @@ pipeline {
                 #     sh 'docker ps | grep -q 5002 && echo "Port 5002 is mapped and the container is running." || exit 1'
                 #     docker-compose up -d
                 #     sleep 10  # Allow services to start
-                #      curl -f http://localhost:5004 || exit 1  # Adjust for backend if needed
+                #      curl -f http://localhost:5002 || exit 1  # Adjust for backend if needed
                 #     docker-compose down
                     '''
                 }
